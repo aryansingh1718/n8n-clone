@@ -1,0 +1,29 @@
+{
+  "name": "http-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc -b",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@repo/db": "workspace:*",
+    "@repo/typeValidator": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@types/axios": "^0.14.4",
+    "@types/express": "^5.0.6",
+    "axios": "^1.18.1",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "slugify": "^1.6.9"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "tsx": "^4.23.1"
+  }
+}
