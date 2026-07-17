@@ -4,7 +4,8 @@ import { getWorkFlows } from "../controllers/getWorkflows.controller";
 import { getWorkFlowById } from "../controllers/getWorkFlowById.controller";
 import { updateWorkFlow } from "../controllers/updateWorkFlow.controller";
 import { deleteWorkFlowById } from "../controllers/deleteWorkFlowById.controller";
-import { executeWorkFlow } from "../controllers/executeWorkFlow.controller";
+import {executeWorkflow} from "../controllers/executeWorkflow.controller";
+import { deleteAllWorkFlows } from "../controllers/deleteAllWorkFlows.controller";
 
 const router:Router = Router();
 
@@ -13,6 +14,7 @@ router.get("/",getWorkFlows);
 router.get("/:slug",getWorkFlowById);
 router.put("/:slug",updateWorkFlow)
 router.delete("/:slug",deleteWorkFlowById)
-router.post("/:slug/execute",executeWorkFlow);
+router.post("/execute/:slug",executeWorkflow);
+router.delete("/",deleteAllWorkFlows);
 
 export default router;

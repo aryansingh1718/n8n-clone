@@ -1,7 +1,7 @@
 import { Request,Response } from "express";
 import prisma from "@repo/db/client";
 
-const getExecutionById = async (req:Request,res:Response) => {
+export const getExecutionById = async (req:Request,res:Response) => {
     const executionId = req.params.id;
     if(typeof executionId !== "string"){
         return res.status(400).json({message:"Invalid execution id"});

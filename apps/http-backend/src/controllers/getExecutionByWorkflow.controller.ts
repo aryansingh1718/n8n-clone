@@ -1,23 +1,38 @@
 import { Request,Response } from "express";
 import prisma from "@repo/db/client";
 
-const getExecutionByWorkflow = async (req:Request,res:Response) => {
-    const workflowSlug = req.params.workflowSlug;
+export const getExecutionByWorkflow = async (req:Request,res:Response) => {
+    const workflowSlug = req.params.slug;
     if(typeof workflowSlug !== "string"){
         return res.status(400).json({message:"workflowSlug is required"});
     }
 
     try{
-        const execution = await prisma.execution.findMany({
+        const workflow = await prisma.workflow.findUnique({
             where:{
-                workflowId: workflowSlug
+                slug: workflowSlug
+            },
+            select:{
+                id:true
+            }
+        })
+        if (!workflow) {
+            return res.status(404).json({ message: "Workflow not found" });
+        }
+
+        const executions = await prisma.execution.findMany({
+            where:{
+                workflowId:workflow.id
             }
         })
 
-        if(!execution){
+        if(!executions){
             return res.status(404).json({message:"Execution not found"});
         }
-        return res.status(200).json(execution);
+        return res.status(200).json({
+            message:"Execution fetched successfully",
+            executions
+        });
     }
     catch(err){
         console.log(err);

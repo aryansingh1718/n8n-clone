@@ -31,5 +31,5 @@ model Execution {
   nodeResults Json
   startedAt   DateTime            @default(now())
   finishedAt  DateTime?
-  workflow    Workflow            @relation(fields:[workflowId],references:[slug], onDelete:Cascade)
+  workflow    Workflow            @relation(fields:[workflowId],references:[id], onDelete:Cascade)
 }

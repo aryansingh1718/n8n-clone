@@ -10,7 +10,7 @@ export async function executeWorkFlow(nodes:WorkFlowNode[],edges:WorkFlowEdge[])
     }> = {};
 
     const startNode =   nodes.find((n) => {
-        !edges.some(e => e.target === n.id)
+        return !edges.some(e => e.target === n.id)
     });
     if(!startNode){
         throw new Error("No starting node found");
