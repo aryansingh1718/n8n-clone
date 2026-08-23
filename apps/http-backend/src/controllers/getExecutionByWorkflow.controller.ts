@@ -30,7 +30,7 @@ export const getExecutionByWorkflow = async (req:Request,res:Response) => {
             return res.status(404).json({message:"Execution not found"});
         }
         return res.status(200).json({
-            message:"Execution fetched successfully",
+            message:"Executions fetched successfully",
             executions
         });
     }

@@ -2,10 +2,10 @@ export interface NodeItem {
     json:Record<string,any>
 };
 
-export interface NodeType {
-    name:string;
-    displayName:string;
-    execute:(items:NodeItem[],params:Record<string,any>) => Promise<NodeItem[]>
+export interface NodeType<TParams = Record<string, any>> {
+    name: string;
+    displayName: string;
+    execute: (items: NodeItem[], params: TParams) => Promise<NodeItem[]>
 }
 
 export interface WorkFlowNode {
@@ -17,4 +17,5 @@ export interface WorkFlowNode {
 export interface WorkFlowEdge {
     source:string;
     target:string;
+    sourceHandle?:boolean;
 }

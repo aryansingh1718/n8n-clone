@@ -19,7 +19,7 @@ export const updateWorkFlow = async(req:Request,res:Response) => {
     }
 
 
-    const { name , nodes , edges , description} = parsedData.data;
+    const { name , nodes , edges , description,active} = parsedData.data;
     let updatedSlug;
     if(name){
         updatedSlug = slugify(name,{
@@ -34,6 +34,7 @@ export const updateWorkFlow = async(req:Request,res:Response) => {
             },
             data:{
                 name,
+                active,
                 nodes,
                 edges,
                 description,

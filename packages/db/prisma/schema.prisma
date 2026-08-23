@@ -16,6 +16,7 @@ model Workflow {
   id          String     @id      @default(uuid())
   slug        String     @unique
   name        String
+  active      Boolean    @default(false)
   nodes       Json       @default("[]")
   edges       Json       @default("[]")
   description String?

@@ -1,7 +1,7 @@
 import { nodeRegistry } from "../nodes/nodeRegistry";
-import { NodeItem , NodeType , WorkFlowNode , WorkFlowEdge} from "../nodes/types";
+import { NodeItem , WorkFlowNode , WorkFlowEdge} from "../nodes/types";
 
-export async function executeWorkFlow(nodes:WorkFlowNode[],edges:WorkFlowEdge[]){
+export async function executeWorkFlow(nodes:WorkFlowNode[],edges:WorkFlowEdge[],initialData:NodeItem[] = []){
     const outputs: Record<string,NodeItem[]> = {};
     const nodeResults: Record<string,{
         status:string,
@@ -28,7 +28,7 @@ export async function executeWorkFlow(nodes:WorkFlowNode[],edges:WorkFlowEdge[])
         const incomingEdges = edges.filter(e => e.target === currentNode.id);
         const incomingItems: NodeItem[] = incomingEdges.length > 0 ?
             incomingEdges.flatMap(e => outputs[e.source] ?? []):
-            []
+            initialData
         
         const nodeImplementation = nodeRegistry[currentNode.type];
         if(!nodeImplementation){
@@ -44,8 +44,11 @@ export async function executeWorkFlow(nodes:WorkFlowNode[],edges:WorkFlowEdge[])
                 outputs:result,
             }
         }
-        catch{
-            nodeResults[currentNode.id] = {status:"failed",error:`Error occurred while executing node ${currentNode.id} and ${currentNode.type}`};
+        catch(err){
+            nodeResults[currentNode.id] = {
+                status:"failed",
+                error: err instanceof Error ? err.message : String(err)
+            };
             continue;
         }
 

@@ -6,6 +6,7 @@ import { updateWorkFlow } from "../controllers/updateWorkFlow.controller";
 import { deleteWorkFlowById } from "../controllers/deleteWorkFlowById.controller";
 import {executeWorkflow} from "../controllers/executeWorkflow.controller";
 import { deleteAllWorkFlows } from "../controllers/deleteAllWorkFlows.controller";
+import { triggerWorkFlowById } from "../controllers/triggerWorkFlowById.controller";
 
 const router:Router = Router();
 
@@ -15,6 +16,7 @@ router.get("/:slug",getWorkFlowById);
 router.put("/:slug",updateWorkFlow)
 router.delete("/:slug",deleteWorkFlowById)
 router.post("/execute/:slug",executeWorkflow);
+router.post("/webhook/:slug",triggerWorkFlowById);
 router.delete("/",deleteAllWorkFlows);
 
 export default router;

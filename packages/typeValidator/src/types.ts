@@ -20,6 +20,7 @@ export const createWorkFlowSchema = z.object({
 
 export const updateWorkFlowSchema = z.object({
     name:z.string().optional(),
+    active:z.boolean().optional(),
     description: z.string().optional(),
     nodes: z.array(nodeSchema).optional(),
     edges: z.array(edgeSchema).optional(),
