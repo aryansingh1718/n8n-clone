@@ -4,7 +4,7 @@ import { getWorkFlows } from "../controllers/getWorkflows.controller";
 import { getWorkFlowById } from "../controllers/getWorkFlowById.controller";
 import { updateWorkFlow } from "../controllers/updateWorkFlow.controller";
 import { deleteWorkFlowById } from "../controllers/deleteWorkFlowById.controller";
-import {executeWorkflow} from "../controllers/executeWorkflow.controller";
+import {executeWorkflow} from "../controllers/executeWorkFlowMannually.controller";
 import { deleteAllWorkFlows } from "../controllers/deleteAllWorkFlows.controller";
 import { triggerWorkFlowById } from "../controllers/triggerWorkFlowById.controller";
 

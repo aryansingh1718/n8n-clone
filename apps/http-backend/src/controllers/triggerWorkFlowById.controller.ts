@@ -1,7 +1,7 @@
 import { Request,Response } from "express";
 import prisma from "@repo/db/client";
-import { executeWorkFlow } from "../engine/executeWorkFlow";
 import { WorkFlowEdge,WorkFlowNode,NodeItem } from "../nodes/types";
+import { runTrackedExecution } from "../engine/runTrackedExecution";
 
 export const triggerWorkFlowById = async (req:Request, res:Response) => {
     const initialData: NodeItem[] = [{ json: req.body }];
@@ -14,9 +14,9 @@ export const triggerWorkFlowById = async (req:Request, res:Response) => {
 
     try{
         const workFlowToTrigger = await prisma.workflow.findFirst({
-        where:{
-            slug
-        }
+            where:{
+                slug
+            }
         })
         if(!workFlowToTrigger){
             return res.status(404).json({
@@ -28,13 +28,14 @@ export const triggerWorkFlowById = async (req:Request, res:Response) => {
                 message:"this workflow cannot be executed yet!"
             });
         }
-
-        const nodes = workFlowToTrigger.nodes as unknown as WorkFlowNode[];
-        const edges = workFlowToTrigger.edges as unknown as WorkFlowEdge[];
-        executeWorkFlow(nodes,edges,initialData).catch(err => console.log(err));
-        return res.json({
-            message:"Workflow started successfully!!"
-        });
+        const {executionId,outputs} = await runTrackedExecution(
+                    workFlowToTrigger.id,
+                    workFlowToTrigger.nodes as unknown as WorkFlowNode[],
+                    workFlowToTrigger.edges as unknown as WorkFlowEdge[],
+                    initialData
+                );
+                return res.json({ message: "triggered", executionId, outputs });
+        
     }catch(err){
         console.log(err);
         return res.status(500).json({message:"Internal server error"});
