@@ -1,5 +1,6 @@
 import { nodeRegistry } from "../nodes/nodeRegistry";
 import { NodeItem , WorkFlowNode , WorkFlowEdge} from "../nodes/types";
+import { expressionResolver } from "./expressionResolver";
 
 export async function executeWorkFlow(nodes:WorkFlowNode[],edges:WorkFlowEdge[],initialData:NodeItem[] = []){
     const outputs: Record<string,NodeItem[]> = {};
@@ -37,7 +38,8 @@ export async function executeWorkFlow(nodes:WorkFlowNode[],edges:WorkFlowEdge[],
         }
 
         try{
-            const result = await nodeImplementation.execute(incomingItems,currentNode.params);
+            const resolvedParams = expressionResolver(currentNode.params,incomingItems);
+            const result = await nodeImplementation.execute(incomingItems,resolvedParams);
             outputs[currentNode.id] = result;
             nodeResults[currentNode.id] = {
                 status:"success",
@@ -49,7 +51,7 @@ export async function executeWorkFlow(nodes:WorkFlowNode[],edges:WorkFlowEdge[],
                 status:"failed",
                 error: err instanceof Error ? err.message : String(err)
             };
-            continue;
+            break;
         }
 
         const outgoingEdges = edges.filter(e => e.source === currentNode.id);
@@ -60,5 +62,12 @@ export async function executeWorkFlow(nodes:WorkFlowNode[],edges:WorkFlowEdge[],
             }
         })
     }
+    for (const node of nodes) {
+            if (!nodeResults[node.id]) {
+                nodeResults[node.id] = { 
+                    status: "skipped" 
+                };
+            }
+        }
     return {outputs,nodeResults};
 }   

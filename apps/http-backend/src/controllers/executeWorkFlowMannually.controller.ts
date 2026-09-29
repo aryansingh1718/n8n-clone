@@ -37,7 +37,7 @@ export const executeWorkflow = async (req:Request,res:Response) => {
         return res.json({ message: "workflow executed successfully",nodeResults, executionId, outputs });
     }catch(err){
         console.log(err);
-        return res.status(500).json({ message: "failed" });
+        return res.status(500).json({ message: "workflow failed" });
     }
     
 }
