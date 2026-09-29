@@ -8,6 +8,7 @@ export async function runTrackedExecution(
     edges:WorkFlowEdge[],
     initialData:NodeItem[] = []
 ) {
+    const executionId = crypto.randomUUID();
     const executionRecord = await prisma.execution.create({
         data:{
             workflowId:workFlowId,
@@ -16,7 +17,7 @@ export async function runTrackedExecution(
         }
     });
     try{
-        const {outputs,nodeResults} = await executeWorkFlow(nodes,edges,initialData);
+        const {outputs,nodeResults} = await executeWorkFlow(nodes,edges,initialData,executionId);
         await prisma.execution.update({
             where:{
                 id:executionRecord.id

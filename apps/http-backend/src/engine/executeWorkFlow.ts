@@ -1,8 +1,8 @@
 import { nodeRegistry } from "../nodes/nodeRegistry";
-import { NodeItem , WorkFlowNode , WorkFlowEdge} from "../nodes/types";
+import { NodeItem , WorkFlowNode , WorkFlowEdge, ExecutionContext} from "../nodes/types";
 import { expressionResolver } from "./expressionResolver";
 
-export async function executeWorkFlow(nodes:WorkFlowNode[],edges:WorkFlowEdge[],initialData:NodeItem[] = []){
+export async function executeWorkFlow(nodes:WorkFlowNode[],edges:WorkFlowEdge[],initialData:NodeItem[] = [],executionId:string){
     const outputs: Record<string,NodeItem[]> = {};
     const nodeResults: Record<string,{
         status:string,
@@ -36,10 +36,16 @@ export async function executeWorkFlow(nodes:WorkFlowNode[],edges:WorkFlowEdge[],
             nodeResults[currentNode.id] = {status:"failed",error:`Node type ${currentNode.type} not found`};
             continue;
         }
+        
+        const context: ExecutionContext = {
+            workflowId: "unknown", 
+            executionId: executionId,
+            currentNodeId: currentNode.id
+        };
 
         try{
             const resolvedParams = expressionResolver(currentNode.params,incomingItems);
-            const result = await nodeImplementation.execute(incomingItems,resolvedParams);
+            const result = await nodeImplementation.execute(incomingItems,resolvedParams,context);
             outputs[currentNode.id] = result;
             nodeResults[currentNode.id] = {
                 status:"success",

@@ -1,11 +1,11 @@
-import { NodeType, NodeItem } from "./types";
+import { NodeType, NodeItem, ExecutionContext } from "./types";
 import vm from "node:vm";
 
 export const codeNode: NodeType = {
     name: "code",
     displayName: "Code",
     
-    execute: async (items: NodeItem[], params: Record<string, any>) => {
+    execute: async (items: NodeItem[], params: Record<string, any>,context: ExecutionContext) => {
         const userCode = params.code || "return items;";
 
         const sandbox = {
@@ -17,11 +17,11 @@ export const codeNode: NodeType = {
 
         const scriptText = `(async () => { ${userCode} })()`;
         
-        const context = vm.createContext(sandbox);
+        const vmContext = vm.createContext(sandbox);
         const script = new vm.Script(scriptText);
 
         try {
-            const result = await script.runInContext(context, { timeout: 2000 });
+            const result = await script.runInContext(vmContext, { timeout: 2000 });
 
             if (Array.isArray(result)) {
                 return result;

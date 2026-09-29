@@ -8,7 +8,7 @@ function evaluateSingleExpression(expression:string,item:NodeItem){
     const trimmed = expression.trim();
     if(trimmed.startsWith('$json.')){
         const path = trimmed.substring(6);
-        return getNestedValue(trimmed,path);
+        return getNestedValue(item.json,path);
     }
 
     if(trimmed === '$now')
